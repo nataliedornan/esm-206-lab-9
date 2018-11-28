@@ -1,6 +1,6 @@
 ---
 title: "Lab 9 - Multiple Linear Regression"
-author: "ENTER YOUR NAME HERE"
+author: "Natalie Dornan"
 output:
   html_document: default
 ---
@@ -31,8 +31,9 @@ Use this template to follow along in Lab Week 9. Each code chunk you'll need is 
 
 # a. Load packages 'tidyverse' and 'stargazer':
 
-
-
+#install.packages("stargazer")
+library(tidyverse)
+library(stargazer)
 ```
 
 ###2. Load data (slo_homes.csv) as a df called 'homes', then filter to create a data frame called 'homes_sub' that only include homes in SLO, Arroyo Grande, Santa Maria-Orcutt, and Atascadero
@@ -41,6 +42,7 @@ Use this template to follow along in Lab Week 9. Each code chunk you'll need is 
 
 # a. Read in data as 'homes':
 
+homes <- read_csv("slo_homes.csv")
 
 # b. Filter to only include cities "San Luis Obispo", "Santa Maria-Orcutt", "Atascadero", and "Arroyo Grande", and call this new subset 'homes_sub':
 
