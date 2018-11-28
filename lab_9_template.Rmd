@@ -139,19 +139,28 @@ Wait...but what if I wanted everything to be with respect to a Regular sale stat
 
 # a. Set Status to class 'factor'
 
+homes_sub$Status <- factor(homes_sub$Status)
+
 
 # b. Check to ensure it's a factor now
+#use class()
 
 
 # c. Check levels:
+#use levels()
 
 
 # d. Reassign reference level of "Status" to "Regular":
+# fct_relevel() function in forecats
 
 
 # e. Now run the regression again - same equation, but now the reference level is different (Status = Regular): 
 
+homes_sub$Status <- fct_relevel(homes_sub$Status, "Regular")
 
+homes_lm3 <- lm(Price ~ City +SqFt + Status, data = homes_sub)
+
+summary(homes_lm3)
 
 ```
 
@@ -168,6 +177,8 @@ Then we can evaluate model diagnostics using the plot() function:
 
 # a. Model diagnostics:
 
+plot(homes_lm3)
+
 ```
 
 ###6. Model comparison by Akaike Information Criterion
@@ -178,7 +189,13 @@ The AIC is a quantitative metric for model "optimization" that balances complexi
 
 # a. AIC values for each model
 
+full_aic <- AIC(homes_lm1)
+final_aic <- AIC(homes_lm3)
+
+full_aic; final_aic #runs code together so you can see in document not console
+
 # Answer: which would you pick? 
+# pick model homes_lm1 as the AIC value is lowest
 
 ```
 
@@ -188,6 +205,7 @@ The AIC is a quantitative metric for model "optimization" that balances complexi
 
 # a. Prepare a nice regression table:
 
+stargazer(homes_lm1, homes_lm3, type = "html") # creates beeeeaauuuuutiful summary table for model outputs
 
 
 # Note: If you want to work with this in Word, save to html, open, copy and paste into Word. 
@@ -232,6 +250,8 @@ df_new <- data.frame(City = rep(c("San Luis Obispo",
                                   times = 12, 
                                   each = 20))
 
+## this model orders your column data in the order you specify
+
 ```
 
 Make predictions for the new data using predict():
@@ -240,8 +260,13 @@ Make predictions for the new data using predict():
 
 # a. Make predictions using the new data frame:
 
+price_predict <- predict(homes_lm3, newdata = df_new, se.fit = T, interval = "confidence")
+
+##class lets you see if your data are numeric or character, note that without additional data it will remain in vector form
+
 # b. Bind predictions to the data to make it actually useful:
 
+predict_df <- data.frame(df_new, price_predict)
 
 
 ```
@@ -251,6 +276,14 @@ Then visualize it!
 ```{r graph, echo = FALSE}
 
 # Create a line graph with square footage on the x-axis, predicted price on y-axis, with color dependent on City and facet_wrapped by sale status (follow along):
+
+
+predict_graph <- ggplot(predict_df, aes(x = SqFt, y = fit.fit)) +
+  geom_line(aes(color = City)) +
+  geom_point(data = homes_sub, aes(x = SqFt, y = Price), alpha = 0.5) + ## add original data from existing dataframe to new graph in ggplot
+  facet_wrap(~Status)
+
+predict_graph
 
 
 ```
