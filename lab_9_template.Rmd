@@ -46,6 +46,8 @@ homes <- read_csv("slo_homes.csv")
 
 # b. Filter to only include cities "San Luis Obispo", "Santa Maria-Orcutt", "Atascadero", and "Arroyo Grande", and call this new subset 'homes_sub':
 
+homes_sub <- homes %>%
+  filter(City == "San Luis Obispo" | City =="Santa Maria-Orcutt" | City == "Atascadero" | City == "Arroyo Grande")
 
 
 ```
@@ -109,8 +111,11 @@ Use summary() to view the model output and statistics.
 
 # a. Saturated model: 
 
+homes_lm1 <- lm(Price ~ City + Bedrooms + Bathrooms + SqFt + PricePerSqFt + Status, data = homes_sub)
 
 # b. Model summary:
+
+summary(homes_lm1)
 
 ```
 
@@ -120,7 +125,11 @@ The next model: Exclude price per square foot, and bedrooms/bathrooms (since the
 
 # a. Updated model with variables City, SqFt, and Status:
 
+homes_lm2 <- lm(Price ~ City + SqFt + Status, data = homes_sub)
+
 # b. Model summary:
+
+summary(homes_lm2)
 
 ```
 
